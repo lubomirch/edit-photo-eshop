@@ -1,14 +1,9 @@
 import streamlit as st
-from rembg import remove, new_session
 from PIL import Image
 import io
 import zipfile
 
-# 1. Změna: Funkce pro načtení AI modelu až na vyžádání
-@st.cache_resource(show_spinner=False)
-def load_ai_model():
-    return new_session("u2netp")
-
+# Úvodní rychlé načtení rozhraní (aby nedošlo k chybě 503)
 st.set_page_config(page_title="Profi E-shop Photo Editor", layout="wide")
 st.title("📸 Profi Hromadný AI editor produktových fotek")
 
@@ -26,9 +21,11 @@ uploaded_files = st.file_uploader("Nahrajte produktové fotografie", type=['png'
 if uploaded_files:
     if st.button(f"Zpracovat {len(uploaded_files)} fotek"):
         
-        # 2. Změna: Model se začne stahovat/načítat až po kliknutí
-        with st.spinner("Načítám AI model (při prvním spuštění to může chvíli trvat)..."):
-            session = load_ai_model()
+        # TĚŽKÉ KNIHOVNY NAČÍTÁME AŽ PO KLIKNUTÍ!
+        with st.spinner("Startuji AI engine (při prvním běhu může trvat i minutu)..."):
+            from rembg import remove, new_session
+            # Používáme odlehčený model "u2netp", aby nedošla paměť
+            session = new_session("u2netp")
             
         progress_bar = st.progress(0)
         zip_buffer = io.BytesIO()
