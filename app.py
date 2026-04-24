@@ -7,7 +7,7 @@ import zipfile
 # 1. Změna: Funkce pro načtení AI modelu až na vyžádání
 @st.cache_resource(show_spinner=False)
 def load_ai_model():
-    return new_session("u2net")
+    return new_session("u2netp")
 
 st.set_page_config(page_title="Profi E-shop Photo Editor", layout="wide")
 st.title("📸 Profi Hromadný AI editor produktových fotek")
