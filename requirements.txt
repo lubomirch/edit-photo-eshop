@@ -1,4 +1,4 @@
 streamlit
-rembg
+rembg[cpu]
 pillow
 opencv-python-headless
