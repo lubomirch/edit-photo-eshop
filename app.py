@@ -25,7 +25,7 @@ if uploaded_files:
         with st.spinner("Startuji AI engine (při prvním běhu může trvat i minutu)..."):
             from rembg import remove, new_session
             # Používáme odlehčený model "u2netp", aby nedošla paměť
-            session = new_session("u2netp")
+            session = new_session("u2net")
             
         progress_bar = st.progress(0)
         zip_buffer = io.BytesIO()
