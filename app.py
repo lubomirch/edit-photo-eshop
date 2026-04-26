@@ -3,7 +3,7 @@ from PIL import Image
 import io
 import zipfile
 
-# Úvodní rychlé načtení rozhraní (aby nedošlo k chybě 503)
+# Úvodní rychlé načtení rozhraní
 st.set_page_config(page_title="Profi E-shop Photo Editor", layout="wide")
 st.title("📸 Profi Hromadný AI editor produktových fotek")
 
@@ -11,20 +11,24 @@ with st.sidebar:
     st.header("1. Nastavení ořezu")
     use_alpha_matting = st.checkbox("Pokročilé vyhlazení hran (agresivnější ořez)", value=False)
     st.markdown("---")
+    
     st.header("2. Nastavení výstupu")
     target_size = st.number_input("Rozměr (px)", value=1000, step=100)
-    margin = st.number_input("Okraj (px)", value=50, step=10)
-    quality = st.slider("Kvalita JPG (komprese)", 10, 100, 85)
+    
+    # ÚPRAVA 1: Výchozí hodnota okraje změněna na 25px
+    margin = st.number_input("Okraj (px)", value=25, step=5)
+    
+    # ÚPRAVA 2: Výchozí kvalita JPG komprese změněna na 80
+    quality = st.slider("Kvalita JPG (komprese)", 10, 100, 80)
 
 uploaded_files = st.file_uploader("Nahrajte produktové fotografie", type=['png', 'jpg', 'jpeg', 'webp'], accept_multiple_files=True)
 
 if uploaded_files:
     if st.button(f"Zpracovat {len(uploaded_files)} fotek"):
         
-        # TĚŽKÉ KNIHOVNY NAČÍTÁME AŽ PO KLIKNUTÍ!
         with st.spinner("Startuji AI engine (při prvním běhu může trvat i minutu)..."):
             from rembg import remove, new_session
-            # Používáme odlehčený model "u2netp", aby nedošla paměť
+            # Používáme plný model u2net pro maximální kvalitu
             session = new_session("u2net")
             
         progress_bar = st.progress(0)
@@ -71,4 +75,9 @@ if uploaded_files:
                 progress_bar.progress((i + 1) / len(uploaded_files))
         
         st.success("✅ Vše hotovo!")
-        st.download_button(label="⬇️ Stáhnout všechny upravené fotky (ZIP)", data=zip_buffer.getvalue(), file_name="upravene_fotky.zip", mime="application/zip")
+        st.download_button(
+            label="⬇️ Stáhnout všechny upravené fotky (ZIP)", 
+            data=zip_buffer.getvalue(), 
+            file_name="upravene_fotky.zip", 
+            mime="application/zip"
+        )
